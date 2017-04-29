@@ -1,50 +1,50 @@
-var express = require('express');
-var router = express.Router();
+var app = require('express');
+var router = app.Router();
+var burger = require('../models/burger.js');
 
-//Import model
-var burgers = require('../models/burger.js');
 
-router.get('/', function (req, res) {
-
-    burgers.selectAll(function (data) {
-        console.log(data)
-
-        var hbsObject = { 
-            burgers: data };
-        console.log(hbsObject);
+// Create all routes
+router.get("/", function(req, res) {
+    burger.read(function(data) {
+   
+        var hbsObject = {
+            // served: served,
+            // devoured: devoured
+            burger: data
+        };
         res.render('index', hbsObject);
     });
 });
 
 
+router.post('/', function(req, res) {
+    burger.create(req.body.newBurger, function() {
 
-router.post('/', function (req, res) {
-    console.log("working???")
-    burgers.create('burger_name', [req.body.name], function () {
+    //   [] "burger_name", "devoured"
+    // ], [req.body.burger_name, req.body.sleepy], function() {
         res.redirect('/');
     });
 });
 
 
-router.put('/:id', function (req, res) {
+router.put('/:id', function(req, res) {
     var condition = 'id = ' + req.params.id;
-
-    console.log('condition', condition);
-
-    //burgers.update({devoured: req.body.sleepy }, condition, function () {difference?
-    burgers.update('devoured',req.body.devoured,condition, function () {
+    burger.update(req.body.devoured, condition, function() {
+// {devoured: req.body.devoured
+    // }, condition, function() {
+        // "id=" + req.params.id, function() {
 
         res.redirect('/');
-    });
+    })
 });
 
-// router.delete('/burgers/delete/:id', function (req, res) {
-//     var condition = 'id = ' + req.params.id;   //params = object property
+router.delete("/:id", function(req, res) {
+    var condition = "id = " + req.params.id;
 
-//     burgers.delete(condition, function () {
-//         res.redirect('/burgers');
-//     });
-// });
+    burger.delete(condition, function() {
+        res.redirect("/");
+    });
+});
 
 
 module.exports = router;

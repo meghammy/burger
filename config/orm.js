@@ -1,7 +1,5 @@
-//Import mqsql 
 var connection = require("../config/connection.js");
 
-//HELPER
 function printQuestionMarks(num) {
     var arr = [];
 
@@ -12,10 +10,7 @@ function printQuestionMarks(num) {
     return arr.toString();
 }
 
-
-//HELP II
-
-function obgToSql(ob) {
+function objToSql(ob) {
     var arr = [];
 
     for (var key in ob) {
@@ -23,82 +18,79 @@ function obgToSql(ob) {
             arr.push(key + "=" + ob[key]);
         }
     }
+
     return arr.toString();
 }
+
+
+
 var orm = {
-    all: function(tableName, cb) {
-        var queryString = "SELECT * FROM " + tableName + ";";
+    read: function(cb) {
+        var queryString = "SELECT * FROM burgers";
+        // var queryString = "SELECT * FROM " + tableInput + ";";
         connection.query(queryString, function(err, result) {
             if (err) {
-                throw err;
+                console.log(err);
             }
+
             cb(result);
         });
     },
 
-    //CREATE
-    create: function(tableName, burgerName, cb) {
-        var queryString = "INSERT INTO " + tableName;
+    create: function(newBurger, cb) {
+        var queryString = "INSERT INTO burgers set ?";
 
-        queryString += " (";
-        queryString += cols.toString();
-        queryString += ") ";
-        queryString += "VALUES (";
-        queryString += printQuestionMarks(vals.length);
-        queryString += ") ";
+        // create: function(table, cols, vals, cb) {
+        //     var queryString = "INSERT INTO " + table;
+        //     queryString += " (";
+        //     queryString += cols.toString();
+        //     queryString += ") ";
+        //     queryString += "VALUES (";
+        //     queryString += printQuestionMarks(vals.length);
+        //     queryString += ") ";
 
-        //      var queryString = "INSERT INTO `"+ tableName +"` (`burger_name`) VALUES ('" + burgerName + "');";
-        // connection.query(queryString, (err, result) => {
-        //   if(err) throw err;
-        //   cb(result);
-        // });
+        connection.query(queryString, { burger_name: newBurger }, function(err, response) { /*values, function(err, result) {*/
+            if (err) {
+                console.log(err);
+            };
+
+            cb(response);
+        });
+    },
 
 
-        console.log(queryString);
+    update: function(columnVals, condition, cb) {
+        var queryString = "UPDATE burgers SET devoured = ? WHERE ?";
+        // update: function(table, cobjColVals, condition, cb) {
+        //     var queryString = "UPDATE " + table;
+        //     queryString += " SET ";
+        //     queryString += objToSql(objColVals);
+        //     queryString += " WHERE ";
+        //     queryString += condition;
+        // var queryString = "UPDATE burgers SET devoured = ? WHERE ?";
+        // connection.query(queryString, function(err, result) {
+        connection.query(queryString, columnVals, condition, function(err, response) {
+            if (err) {
+                console.log(err);
+            }
+            console.log(queryString);
+            cb(response);
+        });
 
-        connection.query(queryString, vals, function(err, result) {
+    },
+    delete: function(table, condition, cb) {
+        var queryString = "DELETE FROM burgers ?";
+        // queryString += " WHERE ";
+        // queryString += condition;
+
+        connection.query(queryString, function(err, response) {
             if (err) {
                 throw err;
             }
 
-            cb(result);
+            cb(response);
         });
-    },
-
-    //UPDATE
-    update: function(table, objColVals, condition, cb) {
-        var queryString = 'UPDATE ' + table;
-        queryString += " SET ";
-        queryString += objToSql(objColVals);
-        queryString += " WHERE ";
-        queryString += condition;
-        console.log(queryString);
-        connection.query(queryString, values, function(err) {
-            if (err) throw err;
-
-            cb(result);
-            //       var queryString = "UPDATE `"+ tableName +"` SET `devoured`= true WHERE `id` = "+ id +";";
-            // connection.query(queryString, (err, result) => {
-            //   if(err) throw err;
-            //   cb(result);
-            //     });
-        });
-    },
-
-    //DELETE
-    delete: function(table, condition, cb) {
-        var queryString = 'DELETE FROM ' + table;
-        queryString += "WHERE";
-        queryString += condition;
-
-        connection.query(queryString, values, function(err) {
-            if (err) throw err;
-
-            cb(result);
-        });
-
     }
 };
 
-//EXPORT ORM
 module.exports = orm;
