@@ -1,7 +1,7 @@
 //Import ORM
 var orm = require('../config/orm.js');
 
-var burger = {
+var burgerModel = {
 	//ALL
 	all: function(cb) {
 		orm.all("burgers", function(res) {
@@ -20,7 +20,7 @@ var burger = {
 
 	//UPDATE
 	update:function(objColVals, condition, cb) {
-		orm.update("burgers", objColVals, condition, function(res) {
+		orm.update('burgers', objColVals, condition, function(res) {
 			cb(res);
 			console.log("Update ORM Working");
 		});
@@ -35,4 +35,4 @@ var burger = {
 };
 
 //Export db
-module.exports = burger;
+module.exports = burgerModel;
