@@ -1,0 +1,12 @@
+/* CREATE DATABASE INFORMATION */
+CREATE DATABASE burger_db;
+USE burger_db;
+
+CREATE TABLE `burgers` (
+id INT NOT NULL AUTO_INCREMENT,
+burger_name varchar(200) NOT NULL,
+devoured BOOLEAN DEFAULT FALSE,
+created DATETIME,
+PRIMARY KEY (id)
+);
+
