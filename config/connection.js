@@ -13,6 +13,7 @@ var connection = mysql.createConnection({
 	user: 'ba72ea1eddb439',
 	password: 'b312901b',
 	database: 'heroku_a3df6cb79e781c0'
+	connectionLimit: 5
 });
 
 //Makes connection
