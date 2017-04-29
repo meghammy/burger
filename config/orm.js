@@ -18,16 +18,16 @@ function printQuestionMarks(num) {
 function obgToSql(ob) {
     var arr = [];
 
-    for(var key in ob) {
-        if(Object.hasOwnProperty.call(ob, key)) {
+    for (var key in ob) {
+        if (Object.hasOwnProperty.call(ob, key)) {
             arr.push(key + "=" + ob[key]);
         }
     }
     return arr.toString();
 }
 var orm = {
-    all: function(tableInput, cb) {
-        var queryString = "SELECT * FROM " + tableInput + ";";
+    all: function(tableName, cb) {
+        var queryString = "SELECT * FROM " + tableName + ";";
         connection.query(queryString, function(err, result) {
             if (err) {
                 throw err;
@@ -37,8 +37,8 @@ var orm = {
     },
 
     //CREATE
-    create: function(table, cols, vals, cb) {
-        var queryString = "INSERT INTO " + table;
+    create: function(tableName, burgerName, cb) {
+        var queryString = "INSERT INTO " + tableName;
 
         queryString += " (";
         queryString += cols.toString();
@@ -46,6 +46,12 @@ var orm = {
         queryString += "VALUES (";
         queryString += printQuestionMarks(vals.length);
         queryString += ") ";
+
+        //      var queryString = "INSERT INTO `"+ tableName +"` (`burger_name`) VALUES ('" + burgerName + "');";
+        // connection.query(queryString, (err, result) => {
+        //   if(err) throw err;
+        //   cb(result);
+        // });
 
 
         console.log(queryString);
@@ -71,6 +77,11 @@ var orm = {
             if (err) throw err;
 
             cb(result);
+            //       var queryString = "UPDATE `"+ tableName +"` SET `devoured`= true WHERE `id` = "+ id +";";
+            // connection.query(queryString, (err, result) => {
+            //   if(err) throw err;
+            //   cb(result);
+            //     });
         });
     },
 
@@ -91,4 +102,3 @@ var orm = {
 
 //EXPORT ORM
 module.exports = orm;
-
